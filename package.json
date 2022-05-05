@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "nodemon --inspect src/index.ts",
     "dev:debug": "nodemon --inspect src/index.ts",
-    "build": "tsc src/index.ts",
+    "build": "tsc",
     "start": "node dist/index.js"
   }
 }
