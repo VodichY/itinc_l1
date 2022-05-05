@@ -36,6 +36,20 @@ app.get('/videos/:videoId', (req: Request, res: Response) => {
 })
 
 app.post('/videos', (req: Request, res: Response) => {
+
+    if(!req.body.title) {
+        res.status(400).
+        send({
+            "errorsMessages": [
+                {
+                    "message": "The Title field is required.",
+                    "field": "title"
+                }
+            ],
+            "resultCode": 1
+        }); 
+    }
+
     const newVideo = {
         id: +(new Date()),
         title: req.body.title,
@@ -47,7 +61,10 @@ app.post('/videos', (req: Request, res: Response) => {
 
 app.delete('/videos/:id',(req: Request, res: Response)=>{
     const id = +req.params.id;
-    videos = videos.filter(elem => elem.id !== id)
+    videos = videos.filter(elem => elem.id !== id);
+    if (!videos) {
+        res.status(404).send('video is not found!');   
+    }
     res.status(204).send();
    })
 
@@ -57,7 +74,21 @@ app.put('/videos/:id',(req: Request, res: Response)=>{
     if (video) {
         video.title =  req.body.title;
     }
-    res.status(204).send(video);
+
+    if(!video || !req.body.title) {
+        res.status(400).
+        send({
+            "errorsMessages": [
+                {
+                    "message": "The Title field is required.",
+                    "field": "title"
+                }
+            ],
+            "resultCode": 1
+        }); 
+    }
+
+    res.send(204);
 })
 
 app.listen(port, () => {
