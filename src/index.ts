@@ -79,6 +79,8 @@ app.put('/videos/:id',(req: Request, res: Response)=>{
     if(video && req.body.title && req.body.title.length <= 40 ) {
         video.title =  req.body.title;
             res.send(204); 
+    } else if(!video) {
+        res.status(404).send();
     } else { 
         res.status(400).
         send({
