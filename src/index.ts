@@ -20,7 +20,7 @@ app.get('/', (req: Request, res: Response ) => {
 })
 
 app.get('/videos', (req: Request, res: Response) => {
-    res.status(200).send(videos);
+    res.status(201).send(videos);
 })
 
 app.get('/videos/:videoId', (req: Request, res: Response) => {
@@ -76,7 +76,7 @@ app.put('/videos/:id',(req: Request, res: Response)=>{
     }
 
     if(!video || !req.body.title) {
-        res.status(400).
+        res.status(404).
         send({
             "errorsMessages": [
                 {
