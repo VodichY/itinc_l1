@@ -20,7 +20,7 @@ app.get('/', (req: Request, res: Response ) => {
 })
 
 app.get('/videos', (req: Request, res: Response) => {
-    res.send(videos);
+    res.status(200).send(videos);
 })
 
 app.get('/videos/:videoId', (req: Request, res: Response) => {
