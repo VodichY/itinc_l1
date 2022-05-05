@@ -35,7 +35,15 @@ app.get('/videos/:videoId', (req: Request, res: Response) => {
 
 app.post('/videos', (req: Request, res: Response) => {
 
-    if(!req.body.title) {
+    if(req.body.title && req.body.title.length <= 40) {
+        const newVideo = {
+            id: +(new Date()),
+            title: req.body.title,
+            author: 'it-incubator.eu'
+        }
+        videos.push(newVideo)
+        res.status(201).send(newVideo)
+    } else {
         res.status(400).
         send({
             "errorsMessages": [
@@ -48,13 +56,7 @@ app.post('/videos', (req: Request, res: Response) => {
         }); 
     }
 
-    const newVideo = {
-        id: +(new Date()),
-        title: req.body.title,
-        author: 'it-incubator.eu'
-    }
-    videos.push(newVideo)
-    res.status(201).send(newVideo)
+    
 })
 
 app.delete('/videos/:id',(req: Request, res: Response)=>{
@@ -65,7 +67,7 @@ app.delete('/videos/:id',(req: Request, res: Response)=>{
         res.status(404).send('video is not found!');   
     } else {
         videos = videos.filter(elem => elem.id !== id);
-        res.status(204).send();
+        res.send(204);
     }
     
    })
@@ -74,7 +76,10 @@ app.put('/videos/:id',(req: Request, res: Response)=>{
     const id = +req.params.id;
     let video = videos.find((elem) => elem.id === id);
     
-    if(!video || !req.body.title) {
+    if(video && req.body.title && req.body.title.length <= 40 ) {
+        video.title =  req.body.title;
+            res.send(204); 
+    } else { 
         res.status(404).
         send({
             "errorsMessages": [
@@ -84,10 +89,7 @@ app.put('/videos/:id',(req: Request, res: Response)=>{
                 }
             ],
             "resultCode": 1
-        }); 
-    } else { 
-            video.title =  req.body.title;
-            res.send(204);  
+        });    
     }
    
 })
