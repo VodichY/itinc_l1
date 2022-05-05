@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 const app = express()
-const port = process.env.port || 5000
+const port = process.env.PORT || 5000
 
 let videos = [
     {id: 1, title: 'About JS - 01', author: 'it-incubator.eu'},
