@@ -59,20 +59,21 @@ app.post('/videos', (req: Request, res: Response) => {
 
 app.delete('/videos/:id',(req: Request, res: Response)=>{
     const id = +req.params.id;
-    videos = videos.filter(elem => elem.id !== id);
-    if (!videos) {
+    const video = videos.find((elem) => elem.id === id);  
+    
+    if (!video) {
         res.status(404).send('video is not found!');   
+    } else {
+        videos = videos.filter(elem => elem.id !== id);
+        res.status(204).send();
     }
-    res.status(204).send();
+    
    })
 
 app.put('/videos/:id',(req: Request, res: Response)=>{
     const id = +req.params.id;
     let video = videos.find((elem) => elem.id === id);
-    if (video) {
-        video.title =  req.body.title;
-    }
-
+    
     if(!video || !req.body.title) {
         res.status(404).
         send({
@@ -84,9 +85,11 @@ app.put('/videos/:id',(req: Request, res: Response)=>{
             ],
             "resultCode": 1
         }); 
+    } else { 
+            video.title =  req.body.title;
+            res.send(204);  
     }
-
-    res.send(204);
+   
 })
 
 app.listen(port, () => {
