@@ -20,18 +20,16 @@ app.get('/', (req: Request, res: Response ) => {
 })
 
 app.get('/videos', (req: Request, res: Response) => {
-    res.status(201).send(videos);
+    res.status(200).send(videos);
 })
 
 app.get('/videos/:videoId', (req: Request, res: Response) => {
     const id = +req.params.videoId;
     const video = videos.find((elem) => elem.id === id);
     if (video) {
-        res.status(201);
-        res.send(video);   
+        res.status(200).send(video); 
     } else {
-        res.status(404);
-        res.send('video is not found!'); 
+        res.status(404).send('video is not found!');
     }
 })
 
