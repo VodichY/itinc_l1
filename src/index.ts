@@ -1,15 +1,8 @@
 import express, { Request, Response } from 'express'
+import { videosRepository } from './repositories/videos-repository'
 import cors from 'cors'
 const app = express()
 const port = process.env.PORT || 5000
-
-let videos = [
-    {id: 1, title: 'About JS - 01', author: 'it-incubator.eu'},
-    {id: 2, title: 'About JS - 02', author: 'it-incubator.eu'},
-    {id: 3, title: 'About JS - 03', author: 'it-incubator.eu'},
-    {id: 4, title: 'About JS - 04', author: 'it-incubator.eu'},
-    {id: 5, title: 'About JS - 05', author: 'it-incubator.eu'},
-]; 
 
 app.use(cors())
 
@@ -20,12 +13,14 @@ app.get('/', (req: Request, res: Response ) => {
 })
 
 app.get('/videos', (req: Request, res: Response) => {
+    const videos = videosRepository.getVideos();
     res.status(200).send(videos);
 })
 
 app.get('/videos/:videoId', (req: Request, res: Response) => {
     const id = +req.params.videoId;
-    const video = videos.find((elem) => elem.id === id);
+    const video = videosRepository.getVideoById(id);
+
     if (video) {
         res.status(200).send(video); 
     } else {
@@ -36,15 +31,10 @@ app.get('/videos/:videoId', (req: Request, res: Response) => {
 app.post('/videos', (req: Request, res: Response) => {
 
     if(req.body.title && req.body.title.length <= 40) {
-        const newVideo = {
-            id: +(new Date()),
-            title: req.body.title,
-            author: 'it-incubator.eu'
-        }
-        videos.push(newVideo)
+        const newVideo = videosRepository.createVideo(req.body.title);
         res.status(201).send(newVideo)
     } else {
-        res.status(400).
+        res.sendStatus(400).
         send({
             "errorsMessages": [
                 {
@@ -61,26 +51,26 @@ app.post('/videos', (req: Request, res: Response) => {
 
 app.delete('/videos/:id',(req: Request, res: Response)=>{
     const id = +req.params.id;
-    const video = videos.find((elem) => elem.id === id);  
+    const video = videosRepository.getVideoById(id);  
     
     if (!video) {
         res.status(404).send('video is not found!');   
     } else {
-        videos = videos.filter(elem => elem.id !== id);
-        res.send(204);
+        const result = videosRepository.deleteVideoById(id);
+        res.sendStatus(204);
     }
     
    })
 
 app.put('/videos/:id',(req: Request, res: Response)=>{
     const id = +req.params.id;
-    let video = videos.find((elem) => elem.id === id);
-    
+    const video = videosRepository.getVideoById(id);
+        
     if(video && req.body.title && req.body.title.length <= 40 ) {
-        video.title =  req.body.title;
+        const result = videosRepository.updateVideoById(id, req.body.title);
             res.send(204); 
     } else if(!video) {
-        res.status(404).send();
+        res.sendStatus(404);
     } else { 
         res.status(400).
         send({
