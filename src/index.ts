@@ -34,7 +34,7 @@ app.post('/videos', (req: Request, res: Response) => {
         const newVideo = videosRepository.createVideo(req.body.title);
         res.status(201).send(newVideo)
     } else {
-        res.sendStatus(400).
+        res.status(400).
         send({
             "errorsMessages": [
                 {
@@ -68,7 +68,7 @@ app.put('/videos/:id',(req: Request, res: Response)=>{
         
     if(video && req.body.title && req.body.title.length <= 40 ) {
         const result = videosRepository.updateVideoById(id, req.body.title);
-            res.send(204); 
+            res.sendStatus(204); 
     } else if(!video) {
         res.sendStatus(404);
     } else { 
