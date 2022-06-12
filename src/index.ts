@@ -4,6 +4,7 @@ import { checkIp } from './common/validationIp';
 import { requestCount } from './common/smthCount';
 import { checkContentType } from './common/validationContent';
 import { checkAuthorization } from './common/auth';
+import { inputValidatorMiddleware, validateHandler } from './common/input-validator-middleware';
 import cors from 'cors'
 const app = express()
 const port = process.env.PORT || 5000
@@ -19,6 +20,8 @@ app.all('*', checkAuthorization)
 app.all('*', checkIp)
 
 app.all('*', checkContentType)
+
+app.all('*', inputValidatorMiddleware, validateHandler)
 
 app.get('/', (req: Request, res: Response ) => {
     res.send('Hello : World!')
